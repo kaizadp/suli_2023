@@ -6,18 +6,19 @@ centenarians <- readr::read_csv('https://raw.githubusercontent.com/rfordatascien
 str(centenarians)
 centenarians$place_of_death_or_residence
 
-install.packages("tidyverse")
-install.packages("plotly")
+# install.packages("tidyverse")
+# install.packages("plotly")
 library(plotly)
 library(ggplot2)
 library(tidytuesdayR)
-age_rank_gender<-plot_ly(data=centenarians, x=~age
-                         , y=~rank, color=~gender)%>%
+age_rank_gender <- 
+  plot_ly(data = centenarians, x = ~age, y = ~rank, color = ~gender) %>%
   add_lines()
+
 summary(centenarians)
 
-age_rank_gender2<-plot_ly(data=centenarians, y=~age
-                          , x=~rank, color=~gender)%>%
+age_rank_gender2 <- 
+  plot_ly(data = centenarians, y = ~age, x = ~rank, color = ~gender) %>%
   add_lines()
 
 
@@ -33,9 +34,10 @@ top_oil
 
 toptop_oil<-subset(owid_energy, oil_consumption>1000000, select = oil_consumption)
 
-nuc<-(owid_energy$nuclear_share_energy>0)
+nuc <- (owid_energy$nuclear_share_energy>0) # this will create a TRUE/FALSE vector 
+nuclear <- subset(owid_energy, nuclear_share_energy>0) # this will create a dataframe where nuclear > 0 
 
-nuclear<-subset(owid_energy, nuclear_share_energy>0)
+
 str(nuclear)
 plot_ly(nuclear, x=~country, y=~nuclear_share_energy)
 
@@ -56,7 +58,7 @@ str(USA)
 
 subplot(oilc, coalp)%>%
   layout(title=list(text="Oil Consumption and Coal Production"))
-
+## KP: try this with ggplot + cowplot
 
 USA_Russia<-subset(owid_energy, country=="United States" | country=="Russia")
 
