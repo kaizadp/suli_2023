@@ -9,6 +9,8 @@ library(forcats)
 library(dplyr)
 library(tidyverse)
 
+#shift+control+m -> %>% 
+
 # load data ----
 centenarians <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-30/centenarians.csv')
 
