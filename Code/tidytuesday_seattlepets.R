@@ -2,7 +2,7 @@
 
 library(tidyverse)
 
-# seattle pets data -------------------------------------------------------
+# seattle pets data: breed count by species -------------------------------------------------------
 
 seattle_pets <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-26/seattle_pets.csv")
 
@@ -27,3 +27,22 @@ pets_summary_greater_500 %>%
   geom_point()+
   facet_wrap(~species, scales = "free_x")+
   theme(axis.text.x = element_text(angle = 45))
+
+# seattle pets data: name count by species, subset cat ----
+
+animal_summary <-
+  cats <- subset(seattle_pets, species == "Cat")
+  seattle_pets %>%
+  group_by(species, animals_name) %>%
+  summarize(name_counts = n())
+
+animal_summary_greater_50 <-
+  cats %>%
+  filter(name_counts > 50)
+# keeps saying name_counts is not found
+
+animal_summary_greater_90 %>%
+  ggplot(aes(x = animals_name, y = name_counts))+ geom_point()+
+  facet_wrap(~species, scales = "free_x")+
+  theme(axis.text.x = element_text(angle = 45, size = 5))
+  
