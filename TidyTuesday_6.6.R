@@ -7,6 +7,7 @@
 library(ggplot2)
 library(forcats)
 library(dplyr)
+library(tidyverse)
 
 # load data ----
 centenarians <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-30/centenarians.csv')
@@ -103,7 +104,23 @@ genderplot2.0 <-
   theme(legend.position="none")
 
 #look at whether or not people born in the 1800s or 1900s have lived longer on average
+centenarians_by_century <- 
+  centenarians %>% 
+  mutate(birth_year = year(birth_date),
+         birth_century = case_when(birth_year < 1900 ~ "1800s",
+                                   birth_year >= 1900 ~ "1900s"))
 
+centenarians_by_century %>% 
+  ggplot(aes(x = birth_century, y = age))+
+  geom_boxplot()+
+ geom_jitter(width = 0.2)+
+  facet_wrap(~gender)
+
+centenarians_by_century %>% 
+  ggplot(aes(x = gender, y = age))+
+  geom_boxplot()+
+  geom_jitter(width = 0.2)+
+  facet_wrap(~birth_century)
 
 #################
  #FINAL GRAPHS#
