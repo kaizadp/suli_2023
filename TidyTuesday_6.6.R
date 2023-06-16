@@ -1,10 +1,14 @@
+# load packages ----
 
-install.packages("tidytuesdayR")
-install.packages("forcats")
-install.packages("dplyr")
+# install.packages("tidytuesdayR")
+# install.packages("forcats")
+# install.packages("dplyr")
+
 library(ggplot2)
 library(forcats)
 library(dplyr)
+
+# load data ----
 centenarians <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-30/centenarians.csv')
 
 #plot that shows age based on birth date
@@ -20,6 +24,13 @@ small_country_counts
 
 #sort alphabetically by country
 sorted <- centenarians[order(centenarians$place_of_death_or_residence),]
+
+## KP: tidyverse alternative
+## sorted <- 
+##   centenarians %>% 
+##   arrange(place_of_death_or_residence) 
+  
+  
 
 #bar chart showing count of people by country
 ggplot(centenarians, aes(x = place_of_death_or_residence)) +
@@ -54,41 +65,31 @@ summary(centenarians$age)
 #Boxplot shows average age for females and males
 genderplot <- 
   ggplot(centenarians, aes(x = gender, y = age,
-  fill = gender)) +
-    geom_jitter(color = "black", size = 2,
-                alpha = 0.5, width = 0.3) +
-    geom_boxplot(alpha = 0.8, outlier.shape = NA) +
-    scale_fill_manual(values = 
-    c("#F76960", "#6D99ED")) +
-    xlab("Gender") +
-    ylab("Age") +
-    theme_bw() +
-    theme(axis.title = element_text(face =
-  "bold", color = "black", size = 18),
-          axis.text.y = element_text(face = 
-  "plain", color = "black", size = 14),
-          axis.text.x = element_text(face = 
-  "italic", color = "black", size = 14),
-          legend.text = element_text(face = 
-  "plain", color = "black", size = 12),
-          legend.title = element_text(face = 
-  "bold", color = "black", size = 12),
-          strip.text.x = element_text(face =
-  "bold", color = "black", size = 18),
-          strip.text.y = element_text(face =
-  "bold", color = "black", size = 18),
-          legend.key.size = unit(1.0, "cm"),
-          axis.ticks.x = element_blank(),
-          axis.ticks.length = unit(0.20,
-  "cm"),
-          axis.line.y = element_line(size = 
-  0.5),
-          axis.line.x = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-  panel.border=element_rect(color = "black",
-  size = 1, fill = NA))
+                           fill = gender)) +
+  geom_boxplot(alpha = 0.8, outlier.shape = NA) +
+  geom_jitter(color = "black", size = 2,
+              alpha = 0.5, width = 0.1) +
+  scale_fill_manual(values = 
+                      c("#F76960", "#6D99ED")) +
+  xlab("Gender") +
+  ylab("Age") +
+  theme_bw() +
+  theme(axis.title = element_text(face = "bold", color = "black", size = 18),
+        axis.text.y = element_text(face = "plain", color = "black", size = 14),
+        axis.text.x = element_text(face = "italic", color = "black", size = 14),
+        legend.text = element_text(face = "plain", color = "black", size = 12),
+        legend.title = element_text(face = "bold", color = "black", size = 12),
+        strip.text.x = element_text(face = "bold", color = "black", size = 18),
+        strip.text.y = element_text(face = "bold", color = "black", size = 18),
+        legend.key.size = unit(1.0, "cm"),
+        axis.ticks.x = element_blank(),
+        axis.ticks.length = unit(0.20, "cm"),
+        axis.line.y = element_line(size = 0.5),
+        axis.line.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        panel.border=element_rect(color = "black", size = 1, fill = NA))
 
 #Way more concise code for boxplot
 genderplot2.0 <- 
