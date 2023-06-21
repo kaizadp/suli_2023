@@ -30,19 +30,21 @@ pets_summary_greater_500 %>%
 
 # seattle pets data: name count by species, subset cat ----
 
+# make name counts for species, subset by cat
 animal_summary <-
-  cats <- subset(seattle_pets, species == "Cat")
   seattle_pets %>%
+  subset(species == "Cat") %>%
   group_by(species, animals_name) %>%
   summarize(name_counts = n())
 
+# filter names by greater than 50 only
 animal_summary_greater_50 <-
-  cats %>%
+  animal_summary %>%
   filter(name_counts > 50)
-# keeps saying name_counts is not found
 
-animal_summary_greater_90 %>%
-  ggplot(aes(x = animals_name, y = name_counts))+ geom_point()+
+# graph
+animal_summary_greater_50 %>%
+  ggplot(aes(x = animals_name, y = name_counts))+ geom_bar(stat="identity", fill="#17EF9A", width=.4)+
   facet_wrap(~species, scales = "free_x")+
-  theme(axis.text.x = element_text(angle = 45, size = 5))
+  theme(axis.text.x = element_text(angle = 45, size = 8)) + labs(x = "Name of Cat", y = "Name Count")
   
