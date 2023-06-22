@@ -37,9 +37,14 @@ animal_summary <-
   group_by(species, animals_name) %>%
   summarize(name_counts = n())
 
+#get rid of NA values
+animal_summary_noNA <-
+  animal_summary %>%
+  na.omit()
+
 # filter names by greater than 50 only
 animal_summary_greater_50 <-
-  animal_summary %>%
+  animal_summary_noNA %>%
   filter(name_counts > 50)
 
 # graph
