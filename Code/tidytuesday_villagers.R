@@ -32,16 +32,13 @@ chicken_summary %>%
   theme(axis.text.x = element_text(size = 8))+ labs(x = "Personality of Chicken Villager", y = "Name of Chicken Villager", title = "Chicken Villagers' Names and Personalities in ACNH")
 
 # trying to make personalities filled by gender or something
-gender_personality <-
+species_personality <-
   villagers %>%
-  group_by(personality, gender) %>%
-  summarize(gen_counts = n())
+  subset(species == "cat" | species == "dog") %>%
+  group_by(personality, species, gender) %>%
+  summarize(s_counts = n())
 
-genders <-
-  villagers %>%
-  group_by(gender) %>%
-  summarize(genderss = n())
+ggplot(species_personality, aes(x = personality, y = s_counts, fill = gender))+ 
+  geom_bar(stat = "identity") + facet_wrap(~species)
 
-gender_personality %>%
-  ggplot(aes(x = personality))+ geom_histogram(aes(color = gender))+
-  theme(axis.text.x = element_text(size = 8))
+             
