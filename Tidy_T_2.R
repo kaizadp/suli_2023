@@ -5,14 +5,21 @@
 # Getting started with data set ----
 ufo_sightings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv')
 
+install.packages("NatParksPalettes")
+library(NatParksPalettes)
+install.packages("devtools")
+
 library(plotly)
 library(tidyverse)
 
 # Taking a look at the dataset
 str(ufo_sightings)
 summary(ufo_sightings)
+glimpse(ufo_sightings)
 
-
+ufo_sightings %>% 
+  pull(country_code) %>% 
+  n_distinct()
 
 # Top countries subset ----
 
@@ -46,6 +53,8 @@ top_ufo2 <- ufo_sightings %>%
   filter(200 < country_ufo) %>%
   mutate(country_code = fct_reorder(country_code, desc(prop_ufo)))
 
+
+
 # Created bar plot for previous subset
 top_ufo2 %>% 
   ggplot(aes(x = country_code, y = prop_ufo, fill = country_code))+
@@ -56,7 +65,7 @@ top_ufo2 %>%
 
 
 
-# Top cities subset ----
+  # Top cities subset ----
 # subset of top 10 cities with ufo sightings
  city_ufo2 <- ufo_sightings %>% 
    group_by(city) %>% 
@@ -70,7 +79,7 @@ top_ufo2 %>%
  city_ufo2 %>% 
    ggplot(aes(x = city, y = city_total, fill = city))+
    geom_bar(stat = "identity", width=.5) +
-   labs(title = "UFO Sightings for Top 10 Cities",
+   labs(title = "UFO Sightings for Top 10 Cities in the World",
         x = "City",
         y ="Number of UFO Sightings",
         fill ="Legend") + 
@@ -79,6 +88,9 @@ top_ufo2 %>%
 
  
 
+
+ 
+ 
 
  
  
@@ -109,6 +121,7 @@ top_ufo2 %>%
    group_by(city) %>% 
    count() %>% 
    arrange(desc(n))
+
  
  
 
