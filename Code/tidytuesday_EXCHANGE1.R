@@ -69,3 +69,32 @@ summary(b)
 
 ab = aov(carbon_weight_perc ~ transect_location + region, data = merged)
 summary(ab)
+
+# revised boxplots, based on regions + transect locations
+subset_great <-
+  merged %>%
+  subset(region == "Great Lakes") %>%
+  mutate(transect_location = factor(transect_location, levels = c("upland", "transition", "wetland")))
+
+subset_great %>%
+  ggplot(aes(x = transect_location, y = carbon_weight_perc, fill = transect_location))+ 
+  geom_boxplot()+
+  geom_jitter(width=0.2, alpha = 0.3)+
+  labs(x = "Transect Location", y = "Carbon Weight (%)", title = "Great Lakes")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_fill_brewer(palette="Set2")+
+  guides(fill = guide_legend(title = "Transect Location"))
+
+subset_atlantic <-
+  merged %>%
+  subset(region == "Mid-Atlantic") %>%
+  mutate(transect_location = factor(transect_location, levels = c("upland", "transition", "wetland")))
+
+subset_atlantic %>%
+  ggplot(aes(x = transect_location, y = carbon_weight_perc, fill = transect_location))+ 
+  geom_boxplot()+
+  geom_jitter(width=0.2, alpha = 0.3)+
+  labs(x = "Transect Location", y = "Carbon Weight (%)", title = "Mid-Atlantic")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_fill_brewer(palette="Set1")+
+  guides(fill = guide_legend(title = "Transect Location"))
