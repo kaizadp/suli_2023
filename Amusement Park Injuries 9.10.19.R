@@ -38,7 +38,6 @@ ride_type <-
   count(device_category)
 
 #smaller subset of rides that injuries were greater than 300
-
 small_ride_type<- 
   ride_type %>% 
   filter(n>300) %>% 
@@ -46,7 +45,6 @@ small_ride_type<-
   mutate(device_category = fct_reorder(device_category, desc(ridetype_injuries)))
 
 #bar graph showing injuries by ride greater than 300
-
 rideplot <-
   small_ride_type %>% 
   ggplot(aes(x = device_category, y = ridetype_injuries, fill = device_category)) +
