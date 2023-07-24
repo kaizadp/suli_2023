@@ -42,14 +42,19 @@ doc_data_initial_final =
          doc_adsorbed_mgl = if_else(doc_adsorbed_mgl < 0, 0, doc_adsorbed_mgl)) %>% 
   filter(!is.na(doc_adsorbed_mgl))
 
+ordered_doc_data <- doc_data_initial_final %>% 
+  mutate(treatment = factor(treatment, levels = c("control", "salt", "acid", "alkaline")))
+
 # Plot ----
-doc_data_initial_final %>% 
+ordered_doc_data %>% 
   ggplot(aes(x = treatment, y = doc_adsorbed_mgl, fill = treatment))+
   geom_boxplot(alpha = 0.8, outlier.shape = NA)+
   geom_jitter(color = "black", size = 2,
               alpha = 0.8, width = 0.3)+
   xlab("Treatment")+
   ylab("DOC Adsorbed (mgl)")+
+  scale_fill_manual(name = "Treatment", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2"))+
+  ylim(0,8.5)+
   facet_wrap(~horizon)
 
 # ANOVA ----
