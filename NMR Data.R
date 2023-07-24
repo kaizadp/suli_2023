@@ -101,3 +101,21 @@ nmr_relabund %>%
   ggtitle("A Horizon")+
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.x = element_text(angle = 45))
+
+# calculate relabund summary
+nmr_relabund_summary = 
+  nmr_relabund %>% 
+  group_by(horizon, treatment, group) %>% 
+  dplyr::summarise(relabund_mean = mean(relabund))
+
+# plot
+nmr_relabund_summary %>% 
+  ggplot(aes(x = treatment, y = relabund_mean, fill = group))+
+  geom_bar(stat = "identity")+
+  scale_fill_manual(name = "Group", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"))+
+  facet_wrap(~horizon, scales = "free_x")+
+  xlab("Treatment")+
+  ylab("Relative Abundance")+
+  ggtitle("A Horizon")+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle = 45))
