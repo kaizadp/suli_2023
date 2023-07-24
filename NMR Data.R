@@ -4,7 +4,7 @@ library(nmrrr)
 library(gridExtra)
 
 #load data ----
-data = nmrrr::nmr_import_spectra(path = "C:/Users/spen761/Downloads/adsorptive_fractionation", method = "mnova")
+data = nmrrr::nmr_import_spectra(path = "data/adsorptive_fractionation/nmr", method = "mnova")
 
 data2 =
   data %>% 
