@@ -6,7 +6,7 @@ library(tidyverse)
 optodes_data = read.csv("data/anoxia-redox/optode_processed_water_2wk_first24hr.csv")
 
 optodes_data %>% 
-  ggplot(aes(x = time_minutes/60, y = do_mg_L))+
+  ggplot(aes(x = time_minutes/60, y = do_mg_L, group = sample_label))+
   geom_line(size = 0.5)+
   facet_wrap(~location)+
   
