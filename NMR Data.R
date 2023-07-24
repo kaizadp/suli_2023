@@ -16,10 +16,10 @@ data2 =
   filter(ppm >= 0 & ppm <= 10) %>% 
   nmr_assign_bins(binset = bins_Clemente2012) %>% 
   # now, format the sampleID column to match the sample_key dataframe
-  mutate(sample_name = str_remove(sampleID, "-fit"),
-         sample_name = paste0("ads_", sample_name)) %>% 
+  mutate(sampleID = str_remove(sampleID, "-fit"),
+         sampleID = paste0("ads_", sampleID)) %>% 
   # now, join the sample key
-  left_join(sample_key)
+  left_join(sample_key, by = c("sampleID" = "sample_name"))
 
 ## TO BE DELETED:
 ##  mutate(treatment = case_when(
@@ -62,7 +62,7 @@ nmr_plot_spectra(a_horizon,
 #B HORIZON SPECTRA ----
 b_horizon <-
   data2 %>% 
-  filter(sampleID == "027-fit"| sampleID == "033-fit" | sampleID == "034-fit" | sampleID == "036-fit" | sampleID == "037-fit")
+  filter(horizon == "B horizon")
 
 nmr_plot_spectra(b_horizon, 
                  binset = bins_Clemente2012,
@@ -80,48 +80,24 @@ nmr_plot_spectra(b_horizon,
 
 # 
 # 3. calculate relative abundance ----
-# A ABUNDANCE ----
 
-#filter out oalkyl group for a horizon samples
-mod_a_horizon <-
-  a_horizon %>% 
-  filter(group != "oalkyl")
-#get relative abundances
-relabund_a = nmr_relabund(mod_a_horizon, method = "AUC")
+# calculate relative abundance per sample
+nmr_relabund = 
+  data2 %>% 
+  # remove oalkyl group
+  filter(group != "oalkyl") %>% 
+  nmr_relabund(method = "AUC") %>% 
+  left_join(sample_key, by = c("sampleID" = "sample_name")) %>% 
+  filter(horizon != "blank")
 
-#reassign treatments to the relative abundances
-sum_a <-
-  relabund_a %>% 
-  mutate(treatment = case_when(
-    startsWith(sampleID, "004") ~ "Control",
-    startsWith(sampleID, "007") ~ "Acid",
-    startsWith(sampleID, "010") ~ "Acid",
-    startsWith(sampleID, "012") ~ "Alkaline",
-    startsWith(sampleID, "015") ~ "Alkaline"))
-
-#bar graph of relative abundances
-rel_a <-
-  sum_a %>% 
-  ggplot(aes(x = treatment, y = relabund, fill = group))+
-    geom_bar(stat = "identity")+
-    scale_fill_manual(name = "Group", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"))+
-    xlab("Treatment")+
-    ylab("Relative Abundance")+
-    ggtitle("A Horizon")+
-    theme(plot.title = element_text(hjust = 0.5))
-
-# B ABUNDANCE ----
-
-relabund_b = nmr_relabund(b_horizon, method = "AUC")
-
-rel_b <-
-relabund_b %>% 
+# plot
+nmr_relabund %>% 
   ggplot(aes(x = sampleID, y = relabund, fill = group))+
   geom_bar(stat = "identity")+
   scale_fill_manual(name = "Group", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"))+
+  facet_wrap(~horizon + treatment, scales = "free_x")+
   xlab("Treatment")+
   ylab("Relative Abundance")+
-  ggtitle("B Horizon")+
-  theme(plot.title = element_text(hjust = 0.5))
-
-grid.arrange(rel_a,rel_b)
+  ggtitle("A Horizon")+
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(angle = 45))
