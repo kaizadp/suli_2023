@@ -4,30 +4,44 @@ library(nmrrr)
 library(gridExtra)
 
 #load data ----
-data = nmrrr::nmr_import_spectra(path = "data/adsorptive_fractionation/nmr", method = "mnova")
+# load sample key
+sample_key = googlesheets4::read_sheet("1ix8ckXv4hwVZ6KBD4ke_BHO_8iBe87CFBCUb7YbS-9E")
 
+# import nmr spectra data using `nmrrr` package
+data = nmrrr::nmr_import_spectra(path = "data/adsorptive-fractionation/nmr", method = "mnova")
+
+# process nmr data
 data2 =
   data %>% 
   filter(ppm >= 0 & ppm <= 10) %>% 
   nmr_assign_bins(binset = bins_Clemente2012) %>% 
-  mutate(treatment = case_when(
-    startsWith(sampleID, "004") ~ "Control",
-    startsWith(sampleID, "007") ~ "Acid",
-    startsWith(sampleID, "010") ~ "Acid",
-    startsWith(sampleID, "012") ~ "Alkaline",
-    startsWith(sampleID, "015") ~ "Alkaline",
-    startsWith(sampleID, "027") ~ "Control",
-    startsWith(sampleID, "033") ~ "Acid",
-    startsWith(sampleID, "034") ~ "Acid",
-    startsWith(sampleID, "036") ~ "Alkaline",
-    startsWith(sampleID, "037") ~ "Alkaline")) %>% 
-  mutate(intensity = if_else(intensity < 0, 0, intensity)) 
-                           
+  # now, format the sampleID column to match the sample_key dataframe
+  mutate(sample_name = str_remove(sampleID, "-fit"),
+         sample_name = paste0("ads_", sample_name)) %>% 
+  # now, join the sample key
+  left_join(sample_key)
+
+## TO BE DELETED:
+##  mutate(treatment = case_when(
+##    startsWith(sampleID, "004") ~ "Control",
+##    startsWith(sampleID, "007") ~ "Acid",
+##    startsWith(sampleID, "010") ~ "Acid",
+##    startsWith(sampleID, "012") ~ "Alkaline",
+##    startsWith(sampleID, "015") ~ "Alkaline",
+##    startsWith(sampleID, "027") ~ "Control",
+##    startsWith(sampleID, "033") ~ "Acid",
+##    startsWith(sampleID, "034") ~ "Acid",
+##    startsWith(sampleID, "036") ~ "Alkaline",
+##    startsWith(sampleID, "037") ~ "Alkaline")) %>% 
+##  mutate(intensity = if_else(intensity < 0, 0, intensity)) 
+
+#
 #A HORIZON SPECTRA ----
 
 #filter out the A horizon samples
 a_horizon <-
   data2 %>% 
+  filter(horizon == "A horizon")
   filter(sampleID == "004-fit"| sampleID == "007-fit" | sampleID == "010-fit" | sampleID == "012-fit" | sampleID == "015-fit")
 #plot a horizon spectra with color determined by treatment
 nmr_plot_spectra(a_horizon, 
