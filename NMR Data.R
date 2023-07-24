@@ -3,7 +3,7 @@ library(tidyverse)
 library(nmrrr)
 library(gridExtra)
 
-#load data ----
+# 1. load and process data ----
 # load sample key
 sample_key = googlesheets4::read_sheet("1ix8ckXv4hwVZ6KBD4ke_BHO_8iBe87CFBCUb7YbS-9E")
 
@@ -36,13 +36,15 @@ data2 =
 ##  mutate(intensity = if_else(intensity < 0, 0, intensity)) 
 
 #
+# 2. plot spectra ----
+
 #A HORIZON SPECTRA ----
 
 #filter out the A horizon samples
 a_horizon <-
   data2 %>% 
   filter(horizon == "A horizon")
-  filter(sampleID == "004-fit"| sampleID == "007-fit" | sampleID == "010-fit" | sampleID == "012-fit" | sampleID == "015-fit")
+
 #plot a horizon spectra with color determined by treatment
 nmr_plot_spectra(a_horizon, 
                  binset = bins_Clemente2012,
@@ -56,7 +58,29 @@ nmr_plot_spectra(a_horizon,
   ggtitle("A Horizon")+
   theme(plot.title = element_text(hjust = 0.5))
 
-#A ABUNDANCE ----
+
+#B HORIZON SPECTRA ----
+b_horizon <-
+  data2 %>% 
+  filter(sampleID == "027-fit"| sampleID == "033-fit" | sampleID == "034-fit" | sampleID == "036-fit" | sampleID == "037-fit")
+
+nmr_plot_spectra(b_horizon, 
+                 binset = bins_Clemente2012,
+                 label_position = 5.5,
+                 stagger = 1,
+                 mapping = aes(x = ppm, y = intensity, 
+                               group = sampleID, color = treatment))+
+  ylim(0, 6)+
+  scale_color_manual(name = "Treatment", values = c("#ffd166", "#073b4c", "#118ab2"))+
+  xlab("Shift (ppm)")+
+  ylab("Intensity")+
+  ggtitle("B Horizon")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# 
+# 3. calculate relative abundance ----
+# A ABUNDANCE ----
 
 #filter out oalkyl group for a horizon samples
 mod_a_horizon <-
@@ -86,24 +110,7 @@ rel_a <-
     ggtitle("A Horizon")+
     theme(plot.title = element_text(hjust = 0.5))
 
-#B HORIZON SPECTRA ----
-b_horizon <-
-  data2 %>% 
-  filter(sampleID == "027-fit"| sampleID == "033-fit" | sampleID == "034-fit" | sampleID == "036-fit" | sampleID == "037-fit")
-
-nmr_plot_spectra(b_horizon, 
-                 binset = bins_Clemente2012,
-                 label_position = 5.5,
-                 stagger = 1,
-                 mapping = aes(x = ppm, y = intensity, 
-                               group = sampleID, color = treatment))+
-  ylim(0, 6)+
-  scale_color_manual(name = "Treatment", values = c("#ffd166", "#073b4c", "#118ab2"))+
-  xlab("Shift (ppm)")+
-  ylab("Intensity")+
-  ggtitle("B Horizon")+
-  theme(plot.title = element_text(hjust = 0.5))
-#B ABUNDANCE ----
+# B ABUNDANCE ----
 
 relabund_b = nmr_relabund(b_horizon, method = "AUC")
 
