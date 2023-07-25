@@ -15,7 +15,10 @@ ggplot(Respiration_new, aes (x=Sample, y=CO2.ppm, fill = Sample))+
   scale_fill_manual(values=c("black", "lightblue", "blue", "red", "darkred"))+
   ylab("CO2 ppm")+
   xlab("Sample ID")+
-  ggtitle("Respiration Data for 2nd Round of Flooding")
+  ggtitle("Respiration Data for 2nd Round of Flooding")+
+  theme(axis.title.x = element_text(size=15))+
+  theme(axis.title.y = element_text(size=15))+
+  theme(legend.text = element_text(size=12))
 
 
 

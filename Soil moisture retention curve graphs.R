@@ -41,7 +41,10 @@ MPa_water_A <- ggplot()+
   ggtitle("Soil Moisture Retention Curves for First Round of Samples A Horizon")+
   scale_colour_manual("",
                       breaks = c("A control", "OWA", "RRA"),
-                      values = c("black", "blue", "red"))
+                      values = c("black", "blue", "red"))+
+  theme(axis.title.x = element_text(size=15))+
+  theme(axis.title.y = element_text(size=15))+
+  theme(legend.text = element_text(size=12))
 
 MPa_water_B <- ggplot() +
   geom_line(data = Bcontrol, aes(x=log(MPa), y=Water.Content..Vol.., colour = "B control"))+
@@ -51,7 +54,11 @@ MPa_water_B <- ggplot() +
   ggtitle("Soil Moisture Retention Curves for First Round of Samples B Horizon")+
   scale_colour_manual("",
                       breaks = c("B control", "OWB","RRB"),
-                      values = c("black", "blue", "red"))
+                      values = c("black", "blue", "red"))+
+  theme(axis.title.x = element_text(size=15))+
+  theme(axis.title.y = element_text(size=15))+
+  theme(legend.text = element_text(size=12))+
+  ylim(0, 125)
 
 
 
