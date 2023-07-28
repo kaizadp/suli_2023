@@ -50,11 +50,12 @@ ordered_doc_data %>%
   ggplot(aes(x = treatment, y = doc_adsorbed_mgl, fill = treatment))+
   geom_boxplot(alpha = 0.8, outlier.shape = NA)+
   geom_jitter(color = "black", size = 2,
-              alpha = 0.8, width = 0.3)+
+              alpha = 0.8, width = 0.4)+
   xlab("Treatment")+
   ylab("DOC Adsorbed (mgl)")+
+  theme(text = element_text(size = 15))+
   scale_fill_manual(name = "Treatment", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2"))+
-  ylim(0,8.5)+
+  ylim(-.001,8.25)+
   facet_wrap(~horizon)
 
 # ANOVA ----

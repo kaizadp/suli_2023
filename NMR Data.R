@@ -62,7 +62,8 @@ nmr_plot_spectra(a_horizon,
 #B HORIZON SPECTRA ----
 b_horizon <-
   data2 %>% 
-  filter(horizon == "B horizon")
+  filter(horizon == "B horizon") %>% 
+  filter(sampleID == "ads_027" | sampleID == "ads_033" | sampleID == "ads_034" | sampleID == "ads_036" | sampleID == "ads_037")
 
 nmr_plot_spectra(b_horizon, 
                  binset = bins_Clemente2012,
@@ -71,14 +72,14 @@ nmr_plot_spectra(b_horizon,
                  mapping = aes(x = ppm, y = intensity, 
                                group = sampleID, color = treatment))+
   ylim(0, 6)+
-  scale_color_manual(name = "Treatment", values = c("#ffd166", "#073b4c", "#118ab2"))+
+  scale_color_manual(name = "Treatment", values = c("#ef476f", "#06d6a0", "#118ab2"))+
   xlab("Shift (ppm)")+
   ylab("Intensity")+
   ggtitle("B Horizon")+
   theme(plot.title = element_text(hjust = 0.5))
 
 
-# 
+
 # 3. calculate relative abundance ----
 
 # calculate relative abundance per sample
@@ -108,14 +109,20 @@ nmr_relabund_summary =
   group_by(horizon, treatment, group) %>% 
   dplyr::summarise(relabund_mean = mean(relabund))
 
+ordered_relabund_data <-
+  nmr_relabund_summary %>% 
+  mutate(treatment = factor(treatment, levels = c("control", "acid","alkaline")))
 # plot
-nmr_relabund_summary %>% 
+ordered_relabund_data %>% 
   ggplot(aes(x = treatment, y = relabund_mean, fill = group))+
   geom_bar(stat = "identity")+
   scale_fill_manual(name = "Group", values = c("#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"))+
   facet_wrap(~horizon, scales = "free_x")+
   xlab("Treatment")+
   ylab("Relative Abundance")+
-  ggtitle("A Horizon")+
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.x = element_text(angle = 45))
+  ggtitle("")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+unique(b_horizon$sampleID)
+
